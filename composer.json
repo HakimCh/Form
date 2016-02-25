@@ -1,0 +1,24 @@
+{
+    "name": "hakimch/form",
+    "type" : "library",
+    "description": "A simple PHP form generator class for PHP 5.4+.",
+    "keywords": ["form","php form", "form class"],
+    "homepage": "https://github.com/HakimCh/Utility/blob/master/src/Utility/Component/Form",
+    "license": "MIT",
+    "authors": [
+            {
+                "name": "Hakim Chmimo",
+                "email": "ab.chmimo@gmail.com",
+                "homepage": "https://github.com/HakimCh",
+                "role": "Developer"
+            }
+        ],
+    "require": {
+        "php": ">=5.4.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "HakimCh\\Form\\": ""
+        }
+    }
+}
