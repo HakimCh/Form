@@ -1,5 +1,5 @@
 # Form Class
-A simple html form generator class for PHP 5.4+.
+A simple html form generator class
 
 ## Example for starting a form
 ````php
