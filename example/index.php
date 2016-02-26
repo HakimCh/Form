@@ -36,46 +36,49 @@ $form = new HakimCh\Form\Form();
     		<?php var_dump($form->files); ?>
     		</div>
     		<?php
-    		$form->addAttr('id', 'HakimCh')
-				->usedFor('upload')
-				->open();
+    		echo $form->addAttr('id', 'HakimCh')
+					  ->usedFor('upload')
+					  ->open();
 			?>
     		<div class="form-group">
     			<?php
-    			$form->label('Name', 'user_name');
-    			$form->addAttr('id', 'userName')->addAttr('placeholder', 'Your name')->text('user_name');
+    			echo $form->label('Name', 'user_name');
+    			echo $form->addAttr('id', 'userName')->addAttr('placeholder', 'Your name')->text('user_name');
     			?>
 			</div>
     		<div class="form-group">
     			<?php
-    			$form->label('Age', 'user_age');
-    			$form->addAttr('id', 'userAge')->addAttr('placeholder', 'Your age')->text('user_age');
+    			echo $form->label('Age', 'user_age');
+    			echo $form->addAttr('id', 'userAge')->addAttr('placeholder', 'Your age')->text('user_age');
     			?>
 			</div>
     		<div class="form-group">
     			<?php
-    			$form->label('Email address', 'user_email');
-    			$form->addAttr('id', 'userEmail')->addAttr('placeholder', 'Your email address')->text('user_email');
+    			echo $form->label('Email address', 'user_email');
+    			echo $form->addAttr('id', 'userEmail')->addAttr('placeholder', 'Your email address')->text('user_email');
     			?>
 			</div>
 			<div class="form-group">
     			<?php
-    			$form->label('Image', 'user_photo');
-    			$form->addAttr('id', 'userImage')->file('user_photo');
+    			echo $form->label('Image', 'user_photo');
+    			echo $form->addAttr('id', 'userImage')
+    					  ->file('user_photo');
     			?>
 			</div>
 			<div class="form-group">
 				<label>Gender</label>
 				<label>
 				<?php
-				$form->addAttr('value','F')->radio('user_gender');
-				$form->addText('Female');
+				echo $form->addAttr('value','F')
+						  ->radio('user_gender');
+				echo $form->addText('Female');
 				?>
 				</label>
 				<label>
 				<?php
-				$form->addAttr('value','M')->radio('user_gender');
-				$form->addText('Male');
+				echo $form->addAttr('value','M')
+						  ->radio('user_gender');
+				echo $form->addText('Male');
     			?>
 				</label>
 			</div>
@@ -83,32 +86,37 @@ $form = new HakimCh\Form\Form();
 				<label>Skills</label>
 				<label>
 				<?php
-				$form->addAttr('value','css')->checkbox('user_skills[]');
-				$form->addText('CSS');
+				echo $form->addAttr('value','css')
+						  ->checkbox('user_skills[]');
+				echo $form->addText('CSS');
 				?>
 				</label>
 				<label>
 				<?php
-				$form->addAttr('value','php')->checkbox('user_skills[]');
-				$form->addText('PHP');
+				echo $form->addAttr('value','php')
+						  ->checkbox('user_skills[]');
+				echo $form->addText('PHP');
 				?>
 				</label>
 				<label>
 				<?php
-				$form->addAttr('value','mysql')->checkbox('user_skills[]');
-				$form->addText('MySQL');
+				echo $form->addAttr('value','mysql')
+						  ->checkbox('user_skills[]');
+				echo $form->addText('MySQL');
     			?>
 				</label>
 			</div>
 			<div class="form-group">
     			<?php
-    			$form->label('Bio', 'user_bio');
-    			$form->addAttr('id', 'userBio')->addAttr('rows', 10)->textarea('user_bio');
+    			echo $form->label('Bio', 'user_bio');
+    			echo $form->addAttr('id', 'userBio')
+    					  ->addAttr('rows', 10)
+    					  ->textarea('user_bio');
     			?>
 			</div>
 			<?php
-			$form->submit('Submit');
-			$form->close();
+			echo $form->submit('Submit');
+			echo $form->close();
 			?>
     	</div>
     </body>
