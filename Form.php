@@ -18,13 +18,13 @@ class Form {
      * Field class name
      * @var array
      */
-    private $classes;
+    public $classes;
 
     /**
      * Field attrs
      * @var array
      */
-    private $attrs;
+    public $attrs;
 
     /**
      * Class instance
@@ -53,10 +53,13 @@ class Form {
     /**
      * Create Form tag
      * @param  string  $action form url
+     * @return string
      */
     public function open($method = 'POST', $action = null) {
-        $action = !is_null($action) ?: $this->curUrl();
-        echo '<form action="'.$action.'" method="'.$method.'"'.$this->generateAttrs().'>';
+        if(is_null($action)) {
+            $action = $this->curUrl();
+        }
+        return '<form action="'.$action.'" method="'.$method.'"'.$this->generateAttrs().'>';
     }
 
     /**
@@ -64,31 +67,32 @@ class Form {
      * @param  INT/STR $value    Value
      * @param  string  $for      name of the field
      * @param  boolean $required The field is required or not
-     * @return object
+     * @return string
      */
     public function label($value, $for = null, $required = null) {
         $field = '<label for="'.$for.'">'.ucfirst($value);
         if($required) $field .= ' <span class="required">*</span>';
-        echo $field . '</label>';
-        return $this;
+        return $field . '</label>';
     }
 
     /**
      * Add a text width tag (strong, label, span, i)
      * @param string  $text text to add
      * @param string  $tag  tag name
+     * @return string
      */
     public function addText($text, $tag = null) {
         if(in_array($tag, ['strong', 'label', 'span', 'i'])) {
             $text = '<'.$tag.'>'.$text.'</'.$tag.'>';
         }
-        echo $text;
+        return $text;
     }
 
     /**
      * Create Select options
      * @param  string $name    Field name
      * @param  array  $options Options
+     * @return string
      */
     public function select($name, $options = []) {
         $field = '<select name="'.$name.'"'.$this->generateAttrs().'>';
@@ -101,21 +105,23 @@ class Form {
                 $field .= '>'.ucfirst($text).'</option>';
             }
         }
-        echo $field . '</select>';
+        return $field . '</select>';
     }
 
     /**
      * Create Textarea
      * @param  string $name   Field name
+     * @return string
      */
     public function textarea($name) {
-        echo '<textarea name="'.$name.'"'.$this->generateAttrs().'>'.$this->get($name).'</textarea>';
+        return '<textarea name="'.$name.'"'.$this->generateAttrs().'>'.$this->get($name).'</textarea>';
     }
 
     /**
      * Create submit button
      * @param  string  $value  field text
      * @param  boolean $icon   the icon class from (fontawsome, typo, ionicons...)
+     * @return string
      */
     public function button($value = 'Submit', $icon = null) {
         $input = '<button type="submit"';
@@ -124,15 +130,16 @@ class Form {
         if($icon) {
             $input .= ' <i class="'.$icon.'"></i>';
         }
-        echo $input.'</button>';
+        return $input.'</button>';
     }
 
     /**
      * Create submit buttom
      * @param  string $value  Field value
+     * @return string
      */
     public function submit($value = 'Submit') {
-        echo '<input type="submit" value="'.$value.'"'.$this->generateAttrs().'>';
+        return '<input type="submit" value="'.$value.'"'.$this->generateAttrs().'>';
     }
 
     /** Reset form */
@@ -140,9 +147,12 @@ class Form {
         $this->datas = null;
     }
 
-    /** Closing the form */
+    /**
+     * Closing the form
+     * @return string
+     */
     public function close() {
-        echo '</form>';
+        return '</form>';
     }
 
     /**
@@ -200,16 +210,21 @@ class Form {
      * Create Input field
      * @param  string $name   Field name
      * @param  string $type   field type (text, password...)
+     * @return string
      */
     private function input($name, $type) {
-        $this->attrs['value'] = $this->get($name);
-        echo '<input type="'.$type.'" name="'.$name.'"'.$this->generateAttrs().'>';
+        $value = $this->get($name);
+        if(!is_null($value)) {
+            $this->attrs['value'] = $this->get($name);
+        }
+        return '<input type="'.$type.'" name="'.$name.'"'.$this->generateAttrs().'>';
     }
 
     /**
      * Create a radio/checkbox field
      * @param  string $name field name
      * @param  string $type field type
+     * @return string
      */
     private function box($name, $type = '') {
         // Remove [] before getting field value
@@ -228,11 +243,12 @@ class Form {
                 }
             }
         }
-        echo '<input type="'.$type.'" name="'.$name.'"'.$this->generateAttrs().'>';
+        return '<input type="'.$type.'" name="'.$name.'"'.$this->generateAttrs().'>';
     }
 
     /**
      * Generate a cleaned submited files inputs
+     * And remove files with errors
      * @return array
      */
     private function files() {
@@ -247,8 +263,6 @@ class Form {
                         'ext'   => pathinfo($file['name'], PATHINFO_EXTENSION)
                     ];
                 }
-                else
-                    $files[$name] = false;
             }
             return $files;
         }
