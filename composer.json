@@ -23,6 +23,7 @@
     },
     "require-dev": {
         "mockery/mockery": "^0.9.5",
-        "phpunit/phpunit": "^5.4"
+        "phpunit/phpunit": "^5.4",
+        "codeclimate/php-test-reporter": "^0.3.2"
     }
 }
