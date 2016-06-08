@@ -8,12 +8,6 @@ class Form {
      */
     public $datas;
 
-    /** 
-     * Files user datas
-     * @var array
-     */
-    public $files;
-
     /**
      * Field class name
      * @var array
@@ -27,37 +21,53 @@ class Form {
     public $attrs;
 
     /**
+     * Field $action
+     * @var string
+     */
+    protected $action;
+
+    /**
      * Class instance
      * @var object
      */
-    private static $_instance;
+    private static $instance;
+
+    /** Initialize class variables */
+    public function __construct() {
+        $this->resetAttrs();
+    }
 
     /**
      * Class's Instance
      * @return object
      */
     public static function init() {
-        if(is_null(self::$_instance)) {
-            self::$_instance = new Form();
+        if(is_null(self::$instance)) {
+            self::$instance = new Form();
         }
-        return self::$_instance;
+        return self::$instance;
     }
 
-    /** Initialize class variables */
-    public function __construct() {
-        $this->datas = $_SERVER['REQUEST_METHOD'] == 'GET' ? $_GET : $_POST;
-        $this->files = $this->files();
-        $this->classes = $this->attrs = [];
+    /**
+     * @param $datas
+     * @param $action
+     */
+    public function setup($datas, $action)
+    {
+        $this->datas = $datas;
+        $this->action = $action;
     }
 
     /**
      * Create Form tag
-     * @param  string  $action form url
+     * @param string $method
+     * @param  string $action form url
      * @return string
      */
-    public function open($method = 'POST', $action = null) {
+    public function open($method = 'POST', $action = null)
+    {
         if(is_null($action)) {
-            $action = $this->curUrl();
+            $action = $this->action;
         }
         return '<form action="'.$action.'" method="'.$method.'"'.$this->generateAttrs().'>';
     }
@@ -174,9 +184,10 @@ class Form {
     /**
      * Add a class name to the field
      * @param string $className class name
+     * @return $this
      */
     public function addClass($className = '') {
-        array_push($this->classes, $className);
+        $this->classes[] = $className;
         return $this;
     }
 
@@ -184,6 +195,7 @@ class Form {
      * Add attribue to the field
      * @param $key   attribue name
      * @param $value attribue value
+     * @return $this
      */
     public function addAttr($key, $value = null) {
         if(is_array($key))
@@ -212,7 +224,7 @@ class Form {
      * @param  string $type   field type (text, password...)
      * @return string
      */
-    private function input($name, $type) {
+    protected function input($name, $type) {
         $value = $this->get($name);
         if(!is_null($value)) {
             $this->attrs['value'] = $this->get($name);
@@ -226,82 +238,44 @@ class Form {
      * @param  string $type field type
      * @return string
      */
-    private function box($name, $type = '') {
+    protected function box($name, $type = '') {
         // Remove [] before getting field value
         $realName = strstr($name, '[', true) ?: $name;
         $fieldValue = $this->get($realName);
-        if($fieldValue){
-            $value = $this->get('value', 'attrs');
-            if($value){
-                if(is_array($fieldValue)) {
-                    $checked = array_key_exists($value, array_flip($fieldValue));
-                } else {
-                    $checked = $fieldValue == $value;
-                }
-                if($checked){
-                    $this->attrs['checked'] = 'checked';
-                }
+        $value = $this->get('value', 'attrs');
+        if($fieldValue && $value){
+            $checked = is_array($fieldValue) ? array_key_exists($value, array_flip($fieldValue)) : $fieldValue == $value;
+            if($checked){
+                $this->attrs['checked'] = 'checked';
             }
         }
-        return '<input type="'.$type.'" name="'.$name.'"'.$this->generateAttrs().'>';
-    }
-
-    /**
-     * Generate a cleaned submited files inputs
-     * And remove files with errors
-     * @return array
-     */
-    private function files() {
-        if(isset($_FILES) && !empty($_FILES)) {
-            $files = [];
-            foreach($_FILES as $name => $file) {
-                if($file["error"] == 0) {
-                    $files[$name] = [
-                        'name'  => time(),
-                        'size'  => $file["size"],
-                        'old'   => pathinfo($file['name'], PATHINFO_FILENAME),
-                        'ext'   => pathinfo($file['name'], PATHINFO_EXTENSION)
-                    ];
-                }
-            }
-            return $files;
-        }
-        return null;
+        return $this->input($name, $type);
     }
 
     /**
      * Generate field's attributes
-     * @param  string $type Field type
-     * @return text
+     * @param string $html
+     * @return string
      */
-    private function generateAttrs() {
-        $html = '';
+    private function generateAttrs($html = '') {
         if(!empty($this->classes)) {
-            $this->attrs['class'] = implode(' ', $this->classes);
+            $html .= 'class="' . implode(' ', $this->classes) . '" ';
         }
         if(!empty($this->attrs)) {
             foreach($this->attrs as $key => $value) {
-                $html .= " $key=\"$value\"";
+                $html .= $key . '="' . $value . '" ';
             }
         }
-        $this->classes = $this->attrs = [];
+        $this->resetAttrs();
         return $html;
     }
 
     /**
-     * Get the current url
-     * @return string current url
+     * clean classes and attrs variable
      */
-    private function curUrl() {
-        $url = 'http';
-        if (isset($_SERVER['HTTPS']) && $_SERVER["HTTPS"] == "on") {$url .= "s";}
-        $url .= "://";
-        if ($_SERVER["SERVER_PORT"] != "80") {
-            $url .= $_SERVER["SERVER_NAME"].":".$_SERVER["SERVER_PORT"].$_SERVER["REQUEST_URI"];
-        } else {
-            $url .= $_SERVER["SERVER_NAME"].$_SERVER["REQUEST_URI"];
-        }
-        return $url;
+    private function resetAttrs()
+    {
+        $this->classes = $this->attrs = [];
     }
 
     /**
@@ -310,12 +284,13 @@ class Form {
      * @param  array  $params the args of method
      * @return object
      */
-    public function __call($method, $params) {
+    public function __call($method, $params)
+    {
         if(in_array($method, ['text','password','date','time','file','hidden','reset'])) {
             array_push($params, $method);
             $method = "input";
         }
-        if(in_array($method, ['checkbox','radio'])) {
+        elseif(in_array($method, ['checkbox','radio'])) {
             array_push($params, $method);
             $method = "box";
         }

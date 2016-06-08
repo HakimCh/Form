@@ -1,18 +1,18 @@
-<?php namespace HakimCh\Form\Tests;
+<?php
+namespace HakimCh\Form\Tests;
+
+use \HakimCh\Form\Form;
+use Mockery\Loader;
 
 define('DS', DIRECTORY_SEPARATOR);
 define('ROOT', dirname(__DIR__).DS);
 
-require ROOT.'Form.php';
+require ROOT.'vendor/autoload.php';
 
-require_once 'Mockery/Loader.php';
-require_once 'Hamcrest/Hamcrest.php';
-$loader = new \Mockery\Loader;
+$loader = new Loader();
 $loader->register();
 
 $_SERVER['REQUEST_METHOD'] = 'POST';
-
-use \HakimCh\Form\Form;
 
 class FormTest extends \PHPUnit_Framework_TestCase
 {
@@ -67,29 +67,6 @@ class FormTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(['enctype'=>'multipart/form-data'], $form->attrs);
     }
 
-    public function testFiles()
-    {
-        $form = new Form();
-        $_FILES = [
-            'file1' => [
-                'name'     =>  'file1.txt',
-                'tmp_name' =>  '/tmp/php42up23',
-                'type'     =>  'text/plain',
-                'size'     =>  42,
-                'error'    =>  0
-            ],
-            'file2' => [
-                'name'     =>  'file2.txt',
-                'tmp_name' =>  '/tmp/phpqsdp23',
-                'type'     =>  'text/plain',
-                'size'     =>  22,
-                'error'    =>  4
-            ],
-        ];
-        $exposedMethod = $this->makePublic($form, 'files');
-        $this->assertCount(1, $exposedMethod->invoke($form));
-    }
-
     public function testGenerateAttrs()
     {
         $form = new Form();
@@ -97,7 +74,7 @@ class FormTest extends \PHPUnit_Framework_TestCase
              ->addClass('mySecondClass')
              ->addAttr(['id'=>'myFormId', 'name'=>'myFormName']);
         $exposedMethod = $this->makePublic($form, 'generateAttrs');
-        $this->assertEquals(' id="myFormId" name="myFormName" class="myClassName mySecondClass"', $exposedMethod->invoke($form));
+        $this->assertEquals('class="myClassName mySecondClass" id="myFormId" name="myFormName" ', $exposedMethod->invoke($form));
     }
 
     private function makePublic($object, $method){

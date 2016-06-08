@@ -20,5 +20,9 @@
         "psr-4": {
             "HakimCh\\Form\\": ""
         }
+    },
+    "require-dev": {
+        "mockery/mockery": "^0.9.5",
+        "phpunit/phpunit": "^5.4"
     }
 }
