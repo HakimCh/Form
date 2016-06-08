@@ -1,7 +1,6 @@
 # IntelliJ project files
 .idea
 *.iml
-.gitignore
 build/
 .idea/
 composer.lock
