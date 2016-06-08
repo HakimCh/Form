@@ -13,12 +13,6 @@ index e69de29..3582bcf 100644
 +      - javascript
 +      - python
 +      - php
-+  apexmetrics:
-+    enabled: true
-+  ratings:
-+    paths:
-+    - "**.cls"
-+    - "**.trigger"
 +  fixme:
 +    enabled: true
 +  phpmd:
@@ -34,3 +28,4 @@ index e69de29..3582bcf 100644
 +  - "**.rb"
 +exclude_paths:
 +- tests/
++- "**/vendor/**/*"
