@@ -1,0 +1,70 @@
+html,
+body {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+body {
+  background: whitesmoke;
+  font-family: Arial;
+  font-size: 14px;
+}
+h1 {
+  font-weight: 300;
+  margin: 0 0 30px 0;
+  text-align: center;
+}
+.wrapper .container {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  width: 50%;
+  max-height: 100%;
+  overflow: auto;
+  background: #fff;
+  padding: 30px;
+  left: 0;
+}
+.wrapper .container form {
+  margin-top: 30px;
+}
+.wrapper .container form .form-group {
+  margin-bottom: 20px;
+}
+.wrapper .container form label {
+  display: block;
+  font-size: 12px;
+  margin-bottom: 5px;
+}
+.wrapper .container form input[type='radio'],
+.wrapper .container form input[type='checkbox'] {
+  width: auto;
+}
+.wrapper .container form select,
+.wrapper .container form textarea,
+.wrapper .container form input[type='text'] {
+  width: 100%;
+  border: 1px #ccc solid;
+  padding: 8px;
+}
+.wrapper .debugger {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  width: 50%;
+  max-height: 100%;
+  overflow: auto;
+  background: #000;
+  color: #fff;
+  padding: 30px;
+  right: 0;
+}
+.wrapper .debugger .code {
+  font-size: 12px;
+  line-height: 18px;
+  text-align: left;
+}
+.wrapper .debugger .code pre {
+  font-family: Arial;
+  letter-spacing: 1px;
+}

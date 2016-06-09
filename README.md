@@ -8,11 +8,17 @@ composer require 'hakimch/form'
 
 # Initialize the form
 ````php
-$form = new HakimCh\Form\Form(); or HakimCh\Form\Form::init();
-echo $form->addAttr('id', 'Form') // Adding attr Id
-    ->addClass('formClass') // adding a class
-    ->usedFor('upload') // If you want use it for upload some files
-    ->open();
+$form = HakimCh\Form\Form::init();
+$form->setup(
+    $datas, // Submited datas
+    $token, // If you want add csrf token (require CSRF class)
+    $action // Current url for action attribute
+);
+echo $form->addAttr([
+                'id' => 'Form', // Adding attr Id
+                'class' => 'formClass', // adding a class
+                'enctype' => 'multipart/form-data' // If you want use it for upload some files
+           ])->open();
 
 // you can add fields here
 
@@ -23,23 +29,20 @@ You can add many field type as (text,password,date,time,file,hidden,textarea)
 ````php
 // Create label(name, for, required)
 // Required arg will add <span class="required">*</span>
-echo $form->label('firstName', 'firstName', false);
+echo $form->addAttr('for', firstName')->label('firstName', true);
 // A normal text field with a name
 echo $form->text('firstName');
 
-// Add a normal text width a tag ('strong', 'label', 'span', 'i')
-echo $form->addText('My first Name', 'strong');
 // Add an Advanced text field with options
 echo $form->addAttr([
         'id' => 'secondName',
-        'value' => 'Chmimo'
+        'value' => 'Chmimo',
+        'class' => 'required greenColor'
       ]) // add attrs by passing an array
-      ->addClass('required') // adding a class name
-      ->addClass('greenColor') // Append another class name
       ->text('secondName');
 // Add a textarea
 echo $form->addAttr('rows',5) // add number of rows
-      ->addClass('redBorder') // adding a class name
+      ->addAttr('class','redBorder') // adding a class name
       ->textarea('about');
 ````
 
@@ -52,24 +55,20 @@ echo $form->select('record', [1, 2, 3]);
 ## Add box field
 Radio field
 ````php
-echo $form->addAttr('value',1)->radio('testRadio');
-echo $form->addText('Radio 1');
-echo $form->addAttr('value',2)->radio('testRadio');
-echo $form->addText('Radio 2');
+echo $form->addAttr('value',1)->radio('testRadio', 'Radio 1');
+echo $form->addAttr('value',2)->radio('testRadio', 'Radio 2');
 ````
 
 Checkbox field
 ````php
-echo $form->addAttr('value',1)->checkbox('testCheckbox[]');
-echo $form->addText('Checkbox 1');
-echo $form->addAttr('value',2)->checkbox('testCheckbox[]');
-echo $form->addText('Checkbox 2');
+echo $form->addAttr('value',1)->checkbox('testCheckbox[]', 'Checkbox 1');
+echo $form->addAttr('value',2)->checkbox('testCheckbox[]', 'Checkbox 2');
 ````
 
 ## Add submit button
 ````php
 // Accept one arg (value)
-echo $form->addClass('btn btn-success')->submit('Send my Form');
+echo $form->addAttr('class', 'btn btn-success')->submit('Send my Form');
 ````
 
 #License
