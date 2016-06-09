@@ -82,10 +82,10 @@ class Form
      * @param  boolean $required
      * @return string
      */
-    public function label($value, $required = false)
+    public function label($value, $required = null)
     {
         $labelValue = ucfirst($value);
-        if($required !== false) {
+        if($required) {
             $labelValue .= ' <span class="required">*</span>';
         }
         return $this->addTag('label', $labelValue);
@@ -127,9 +127,9 @@ class Form
      * @param  boolean $iconClass the icon class from (fontawsome, ionicons...)
      * @return string
      */
-    public function button($value = 'Submit', $iconClass = false)
+    public function button($value = 'Submit', $iconClass = null)
     {
-        if($iconClass !== false){
+        if($iconClass){
             $value .= ' <i class="'.$iconClass.'"></i>';
         }
         return $this->addTag('button', $value);
@@ -146,41 +146,9 @@ class Form
     }
 
     /**
-     * Reset form
-     */
-    public function reset()
-    {
-        $this->datas = [];
-    }
-
-    /**
-     * Closing the form
-     * @return string
-     */
-    public function close() {
-        return '</form>';
-    }
-
-    /**
-     * Get element by key from the user datas
-     * @param  string $key the field name
-     * @param  string $source source of datas (datas, files, attributes)
-     * @return Return value or a null
-     */
-    public function get($key = '', $source = 'datas')
-    {
-        if(in_array($source, ['datas', 'attributes'])) {
-            $array = $this->$source;
-            if(!empty($array) && array_key_exists($key, $array))
-                return $array[$key];
-        }
-        return null;
-    }
-
-    /**
      * Add an attribute to the field
-     * @param $key   attribute name
-     * @param $value attribute value
+     * @param String|Array $key attribute name
+     * @param Integer|String $value attribute value
      * @return $this
      */
     public function addAttr($key, $value = null)
@@ -193,12 +161,28 @@ class Form
     }
 
     /**
+     * Get element by key from the user datas
+     * @param  string $key the field name
+     * @param  string $source source of datas (datas, files, attributes)
+     * @return Return value or a null
+     */
+    public function get($key = '', $source = 'datas')
+    {
+        if(property_exists($this, $source)) {
+            $property = $this->$source;
+            if(!empty($property) && array_key_exists($key, $property))
+                return $property[$key];
+        }
+        return null;
+    }
+
+    /**
      * Create Input field
      * @param  string $fieldName Field name
      * @param  string $type field type (text, password...)
      * @return string
      */
-    private function input($fieldName, $type) {
+    protected function input($fieldName, $type) {
         $value = $this->get($fieldName);
         if(!is_null($value)) {
             $this->attributes['value'] = $this->get($fieldName);
@@ -213,9 +197,9 @@ class Form
      * @param string $type field type
      * @return string
      */
-    private function box($fieldName, $fieldLabel = '', $type = '')
+    protected function box($fieldName, $fieldLabel = '', $type = '')
     {
-        $fieldValue = $this->get($realName);
+        $fieldValue = $this->get($fieldName);
         $value = $this->get('value', 'attrs');
         if($fieldValue && $value){
             $checked = is_array($fieldValue) ? array_key_exists($value, array_flip($fieldValue)) : $fieldValue == $value;
@@ -232,7 +216,7 @@ class Form
      * @param $tagContent  Tag content or value
      * @return string
      */
-    private function addTag($tagType, $tagContent)
+    protected function addTag($tagType, $tagContent)
     {
         $attributes = $this->attributesToHtml();
         return '<'.$tagType.' '.$attributes.'>'.$tagContent.'</'.$tagType.'>';
@@ -271,6 +255,12 @@ class Form
         elseif(in_array($tagName, ['checkbox','radio'])) {
             array_push($methodParams, $tagName);
             $method = "box";
+        }
+        elseif($tagName == 'close') {
+            return '</form>';
+        }
+        elseif($tagName == 'reset') {
+            $this->datas = [];
         }
         $handler = [$this, $method];
         return !is_null($method) && is_callable($handler) ? call_user_func_array($handler, $methodParams) : '';
