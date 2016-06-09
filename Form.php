@@ -4,13 +4,13 @@ namespace HakimCh\Form;
 class Form
 {
     /**
-     * Submited datas
+     * Submitted datas
      * @var array
      */
     public $datas = [];
 
     /**
-     * tag attributes
+     * Tag attributes
      * @var array
      */
     public $attributes = [];
@@ -22,7 +22,7 @@ class Form
     private $action = '';
 
     /**
-     * Form csrf token
+     * Form CSRF token
      * @var string
      */
     private $token = '';
@@ -46,9 +46,10 @@ class Form
     }
 
     /**
-     * @param array $datas
-     * @param string $token
-     * @param string $action
+     * Setup the class provided from a framework or script
+     * @param array $datas Submitted data (GET, POST)
+     * @param string $token CSRF token
+     * @param string $action Url action
      */
     public function setup($datas=[], $token='', $action='')
     {
@@ -122,8 +123,8 @@ class Form
 
     /**
      * Create submit button
-     * @param  string  $value  field text
-     * @param  boolean $iconClass   the icon class from (fontawsome, typo, ionicons...)
+     * @param  string  $value field text
+     * @param  boolean $iconClass the icon class from (fontawsome, ionicons...)
      * @return string
      */
     public function button($value = 'Submit', $iconClass = false)
@@ -135,7 +136,7 @@ class Form
     }
 
     /**
-     * Create submit buttom
+     * Create submit button
      * @param  string $value  Field value
      * @return string
      */
@@ -144,7 +145,9 @@ class Form
         return $this->addAttr('value', $value)->input('submit', 'submit');
     }
 
-    /** Reset form */
+    /**
+     * Reset form
+     */
     public function reset()
     {
         $this->datas = [];
@@ -160,8 +163,8 @@ class Form
 
     /**
      * Get element by key from the user datas
-     * @param  string $key      the field name
-     * @param  string $source   source of datas (datas, files, attrs)
+     * @param  string $key the field name
+     * @param  string $source source of datas (datas, files, attributes)
      * @return Return value or a null
      */
     public function get($key = '', $source = 'datas')
@@ -175,7 +178,7 @@ class Form
     }
 
     /**
-     * Add attribue to the field
+     * Add an attribute to the field
      * @param $key   attribute name
      * @param $value attribute value
      * @return $this
@@ -191,8 +194,8 @@ class Form
 
     /**
      * Create Input field
-     * @param  string $fieldName   Field name
-     * @param  string $type   field type (text, password...)
+     * @param  string $fieldName Field name
+     * @param  string $type field type (text, password...)
      * @return string
      */
     private function input($fieldName, $type) {
@@ -223,6 +226,12 @@ class Form
         return $this->input($fieldName, $type) . " " . $fieldLabel;
     }
 
+    /**
+     * Add an HTML Form tag
+     * @param $tagType Tag type (label, textarea, select...)
+     * @param $tagContent  Tag content or value
+     * @return string
+     */
     private function addTag($tagType, $tagContent)
     {
         $attributes = $this->attributesToHtml();
@@ -252,7 +261,7 @@ class Form
      * @param $methodParams
      * @return string
      */
-    private function __call($tagName, $methodParams)
+    public function __call($tagName, $methodParams)
     {
         $method = null;
         if(in_array($tagName, ['text','password','date','time','file','hidden','reset'])) {

@@ -1,11 +1,11 @@
 <?php
 namespace HakimCh\Form\Tests;
 
+require dirname(__DIR__).'/vendor/autoload.php';
+
 use \PHPUnit_Framework_TestCase;
 use \HakimCh\Form\Form;
 use Mockery\Loader;
-
-require dirname(__DIR__).'/vendor/autoload.php';
 
 $loader = new Loader();
 $loader->register();
@@ -52,8 +52,7 @@ class FormTest extends PHPUnit_Framework_TestCase
     public function testAttributesToHtml()
     {
         $form = new Form();
-        $form->addClass('myClassName')
-             ->addClass('mySecondClass')
+        $form->addAttr('class', 'myClassName mySecondClass')
              ->addAttr(['id'=>'myFormId', 'name'=>'myFormName']);
         $exposedMethod = $this->makePublic($form, 'attributesToHtml');
         $this->assertEquals('class="myClassName mySecondClass" id="myFormId" name="myFormName" ', $exposedMethod->invoke($form));
