@@ -1,5 +1,6 @@
 # Form Class
 A simple html form generator class
+[![Code Climate](https://codeclimate.com/github/HakimCh/Form/badges/gpa.svg)](https://codeclimate.com/github/HakimCh/Form)
 
 # Install via composer
 ````code
