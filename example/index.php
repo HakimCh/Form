@@ -2,7 +2,7 @@
 // Include Form class
 include '../Form.php';
 // Initialize the Form object
-$form = new HakimCh\Form\Form();
+$form = new HakimCh\Form\Form::init();
 ?>
 <!doctype html>
 <html>
@@ -28,17 +28,13 @@ $form = new HakimCh\Form\Form();
     	<div class="container">
     		<h1>Form class</h1>
     		<div class="code">
-    		<p><strong>Fields array</strong></p>
-    		<?php var_dump($form->datas); ?>
-    		</div>
-    		<div class="code">
-    		<p><strong>Files array</strong></p>
-    		<?php var_dump($form->files); ?>
+	    		<p><strong>Submited datas</strong></p>
+	    		<pre>POST : <?php print_r($_POST); ?></pre>
+	    		<pre>GET : <?php print_r($_GET); ?></pre>
+	    		<pre>Files : <?php print_r($_FILES); ?></pre>
     		</div>
     		<?php
-    		echo $form->addAttr('id', 'HakimCh')
-					  ->usedFor('upload')
-					  ->open();
+    		echo $form->addAttr(['id'=>'HakimCh', 'enctype'=>'multipart/form-data'])->open();
 			?>
     		<div class="form-group">
     			<?php
@@ -61,24 +57,19 @@ $form = new HakimCh\Form\Form();
 			<div class="form-group">
     			<?php
     			echo $form->label('Image', 'user_photo');
-    			echo $form->addAttr('id', 'userImage')
-    					  ->file('user_photo');
+    			echo $form->addAttr('id', 'userImage')->file('user_photo');
     			?>
 			</div>
 			<div class="form-group">
 				<label>Gender</label>
 				<label>
 				<?php
-				echo $form->addAttr('value','F')
-						  ->radio('user_gender');
-				echo $form->addText('Female');
+				echo $form->addAttr('value','F')->radio('user_gender', 'Female');
 				?>
 				</label>
 				<label>
 				<?php
-				echo $form->addAttr('value','M')
-						  ->radio('user_gender');
-				echo $form->addText('Male');
+				echo $form->addAttr('value','M')->radio('user_gender', 'Male');
     			?>
 				</label>
 			</div>
@@ -86,23 +77,17 @@ $form = new HakimCh\Form\Form();
 				<label>Skills</label>
 				<label>
 				<?php
-				echo $form->addAttr('value','css')
-						  ->checkbox('user_skills[]');
-				echo $form->addText('CSS');
+				echo $form->addAttr('value','css')->checkbox('user_skills[]', 'CSS');
 				?>
 				</label>
 				<label>
 				<?php
-				echo $form->addAttr('value','php')
-						  ->checkbox('user_skills[]');
-				echo $form->addText('PHP');
+				echo $form->addAttr('value','php')->checkbox('user_skills[]', 'PHP');
 				?>
 				</label>
 				<label>
 				<?php
-				echo $form->addAttr('value','mysql')
-						  ->checkbox('user_skills[]');
-				echo $form->addText('MySQL');
+				echo $form->addAttr('value','mysql')->checkbox('user_skills[]', 'MySQL');
     			?>
 				</label>
 			</div>

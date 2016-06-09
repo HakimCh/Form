@@ -1,30 +1,31 @@
-<?php namespace HakimCh\Form;
+<?php
+namespace HakimCh\Form;
 
-class Form {
-
+class Form
+{
     /**
-     * User datas
+     * Submited datas
      * @var array
      */
-    public $datas;
+    public $datas = [];
 
     /**
-     * Field class name
+     * tag attributes
      * @var array
      */
-    public $classes;
+    public $attributes = [];
 
     /**
-     * Field attrs
-     * @var array
-     */
-    public $attrs;
-
-    /**
-     * Field $action
+     * Form action url
      * @var string
      */
-    protected $action;
+    private $action = '';
+
+    /**
+     * Form csrf token
+     * @var string
+     */
+    private $token = '';
 
     /**
      * Class instance
@@ -32,16 +33,12 @@ class Form {
      */
     private static $instance;
 
-    /** Initialize class variables */
-    public function __construct() {
-        $this->resetAttrs();
-    }
-
     /**
      * Class's Instance
      * @return object
      */
-    public static function init() {
+    public static function init()
+    {
         if(is_null(self::$instance)) {
             self::$instance = new Form();
         }
@@ -49,12 +46,14 @@ class Form {
     }
 
     /**
-     * @param $datas
-     * @param $action
+     * @param array $datas
+     * @param string $token
+     * @param string $action
      */
-    public function setup($datas, $action)
+    public function setup($datas=[], $token='', $action='')
     {
-        $this->datas = $datas;
+        $this->datas  = $datas;
+        $this->token  = $token;
         $this->action = $action;
     }
 
@@ -64,83 +63,75 @@ class Form {
      * @param  string $action form url
      * @return string
      */
-    public function open($method = 'POST', $action = null)
+    public function open($method = 'POST', $action = '')
     {
-        if(is_null($action)) {
+        if(empty($action)) {
             $action = $this->action;
         }
-        return '<form action="'.$action.'" method="'.$method.'"'.$this->generateAttrs().'>';
+        $html = '<form action="'.$action.'" method="'.$method.'"'.$this->attributesToHtml().'>';
+        if(!empty($this->token)) {
+            $html .= $this->addAttr('value', $this->token)->input('token', 'hidden');
+        }
+        return $html;
     }
 
     /**
      * Create label
-     * @param  INT/STR $value    Value
-     * @param  string  $for      name of the field
-     * @param  boolean $required The field is required or not
+     * @param  string|integer $value
+     * @param  boolean $required
      * @return string
      */
-    public function label($value, $for = null, $required = null) {
-        $field = '<label for="'.$for.'">'.ucfirst($value);
-        if($required) $field .= ' <span class="required">*</span>';
-        return $field . '</label>';
-    }
-
-    /**
-     * Add a text width tag (strong, label, span, i)
-     * @param string  $text text to add
-     * @param string  $tag  tag name
-     * @return string
-     */
-    public function addText($text, $tag = null) {
-        if(in_array($tag, ['strong', 'label', 'span', 'i'])) {
-            $text = '<'.$tag.'>'.$text.'</'.$tag.'>';
+    public function label($value, $required = false)
+    {
+        $labelValue = ucfirst($value);
+        if($required !== false) {
+            $labelValue .= ' <span class="required">*</span>';
         }
-        return $text;
+        return $this->addTag('label', $labelValue);
     }
 
     /**
-     * Create Select options
-     * @param  string $name    Field name
-     * @param  array  $options Options
+     * Create Select tag
+     * @param string $fieldName
+     * @param array $options
      * @return string
      */
-    public function select($name, $options = []) {
-        $field = '<select name="'.$name.'"'.$this->generateAttrs().'>';
+    public function select($fieldName, $options = [])
+    {
+        $fieldOptions = '';
         if(!empty($options)) {
+            $fieldValue = $this->get($fieldName);
             foreach($options as $value => $text) {
-                $field .= '<option value="'.$value.'"';
-                if($this->get($name) == $value) {
-                    $field .= ' selected="selected"';
-                }
-                $field .= '>'.ucfirst($text).'</option>';
+                $selected = $fieldValue != $value ?: ' selected="selected"';
+                $fieldOptions .= '<option value="'.$value.'"'.$selected.'>'.ucfirst($text).'</option>';
             }
         }
-        return $field . '</select>';
+        return $this->addTag('select', $fieldOptions);
     }
 
     /**
-     * Create Textarea
-     * @param  string $name   Field name
+     * Create Textarea tag
+     * @param  string $fieldName
      * @return string
      */
-    public function textarea($name) {
-        return '<textarea name="'.$name.'"'.$this->generateAttrs().'>'.$this->get($name).'</textarea>';
+    public function textarea($fieldName)
+    {
+        $fieldValue = $this->get($fieldName);
+        return $this->addTag('textarea', $fieldValue);
     }
 
     /**
      * Create submit button
      * @param  string  $value  field text
-     * @param  boolean $icon   the icon class from (fontawsome, typo, ionicons...)
+     * @param  boolean $iconClass   the icon class from (fontawsome, typo, ionicons...)
      * @return string
      */
-    public function button($value = 'Submit', $icon = null) {
-        $input = '<button type="submit"';
-        $input .= $this->generateAttrs();
-        $input .= '>'.$value;
-        if($icon) {
-            $input .= ' <i class="'.$icon.'"></i>';
+    public function button($value = 'Submit', $iconClass = false)
+    {
+        if($iconClass !== false){
+            $value .= ' <i class="'.$iconClass.'"></i>';
         }
-        return $input.'</button>';
+        return $this->addTag('button', $value);
     }
 
     /**
@@ -148,13 +139,15 @@ class Form {
      * @param  string $value  Field value
      * @return string
      */
-    public function submit($value = 'Submit') {
-        return '<input type="submit" value="'.$value.'"'.$this->generateAttrs().'>';
+    public function submit($value = 'Submit')
+    {
+        return $this->addAttr('value', $value)->input('submit', 'submit');
     }
 
     /** Reset form */
-    public function reset() {
-        $this->datas = null;
+    public function reset()
+    {
+        $this->datas = [];
     }
 
     /**
@@ -171,85 +164,69 @@ class Form {
      * @param  string $source   source of datas (datas, files, attrs)
      * @return Return value or a null
      */
-    public function get($key = null, $source = 'datas') {
-        if(in_array($source, ['datas', 'files', 'attrs'])) {
+    public function get($key = '', $source = 'datas')
+    {
+        if(in_array($source, ['datas', 'attributes'])) {
             $array = $this->$source;
-            if(array_key_exists($key, $array)) {
+            if(!empty($array) && array_key_exists($key, $array))
                 return $array[$key];
-            }
         }
         return null;
     }
 
     /**
-     * Add a class name to the field
-     * @param string $className class name
-     * @return $this
-     */
-    public function addClass($className = '') {
-        $this->classes[] = $className;
-        return $this;
-    }
-
-    /**
      * Add attribue to the field
-     * @param $key   attribue name
-     * @param $value attribue value
+     * @param $key   attribute name
+     * @param $value attribute value
      * @return $this
      */
-    public function addAttr($key, $value = null) {
+    public function addAttr($key, $value = null)
+    {
         if(is_array($key))
-            $this->attrs += $key;
+            $this->attributes += $key;
         else
-            $this->attrs[$key] = $value;
-        return $this;
-    }
-
-    /**
-     * Add special attribues to form
-     * @param $value
-     * @return object
-     */
-    public function usedFor($value = '') {
-        switch ($value) {
-            case 'validation': $this->attrs['novalidate'] = 'novalidate'; break;
-            case 'upload': $this->attrs['enctype'] = 'multipart/form-data'; break;
-        }
+            $this->attributes[$key] = $value;
         return $this;
     }
 
     /**
      * Create Input field
-     * @param  string $name   Field name
+     * @param  string $fieldName   Field name
      * @param  string $type   field type (text, password...)
      * @return string
      */
-    protected function input($name, $type) {
-        $value = $this->get($name);
+    private function input($fieldName, $type) {
+        $value = $this->get($fieldName);
         if(!is_null($value)) {
-            $this->attrs['value'] = $this->get($name);
+            $this->attributes['value'] = $this->get($fieldName);
         }
-        return '<input type="'.$type.'" name="'.$name.'"'.$this->generateAttrs().'>';
+        return '<input type="'.$type.'" name="'.$fieldName.'"'.$this->attributesToHtml().'>';
     }
 
     /**
      * Create a radio/checkbox field
-     * @param  string $name field name
-     * @param  string $type field type
+     * @param string $fieldName field name
+     * @param string $fieldLabel field label
+     * @param string $type field type
      * @return string
      */
-    protected function box($name, $type = '') {
-        // Remove [] before getting field value
-        $realName = strstr($name, '[', true) ?: $name;
+    private function box($fieldName, $fieldLabel = '', $type = '')
+    {
         $fieldValue = $this->get($realName);
         $value = $this->get('value', 'attrs');
         if($fieldValue && $value){
             $checked = is_array($fieldValue) ? array_key_exists($value, array_flip($fieldValue)) : $fieldValue == $value;
             if($checked){
-                $this->attrs['checked'] = 'checked';
+                $this->attributes['checked'] = 'checked';
             }
         }
-        return $this->input($name, $type);
+        return $this->input($fieldName, $type) . " " . $fieldLabel;
+    }
+
+    private function addTag($tagType, $tagContent)
+    {
+        $attributes = $this->attributesToHtml();
+        return '<'.$tagType.' '.$attributes.'>'.$tagContent.'</'.$tagType.'>';
     }
 
     /**
@@ -257,47 +234,36 @@ class Form {
      * @param string $html
      * @return string
      */
-    private function generateAttrs($html = '') {
-        if(!empty($this->classes)) {
-            $html .= 'class="' . implode(' ', $this->classes) . '" ';
-        }
-        if(!empty($this->attrs)) {
-            foreach($this->attrs as $key => $value) {
-                $html .= $key . '="' . $value . '" ';
+    private function attributesToHtml($html = '')
+    {
+        if(!empty($this->attributes)) {
+            foreach($this->attributes as $key => $value) {
+                $value = is_array($value) ? implode(' ', $value) : $value;
+                $html .= is_numeric($key) ? $value.' ' : $key.'="'.$value.'" ';
             }
         }
-        $this->resetAttrs();
+        $this->attributes = [];
         return $html;
     }
 
     /**
-     * clean classes and attrs variable
-     */
-    private function resetAttrs()
-    {
-        $this->classes = $this->attrs = [];
-    }
-
-    /**
      * Magic methods call
-     * @param  string $method the name of method
-     * @param  array  $params the args of method
-     * @return object
+     * @param $tagName
+     * @param $methodParams
+     * @return string
      */
-    public function __call($method, $params)
+    private function __call($tagName, $methodParams)
     {
-        if(in_array($method, ['text','password','date','time','file','hidden','reset'])) {
-            array_push($params, $method);
+        $method = null;
+        if(in_array($tagName, ['text','password','date','time','file','hidden','reset'])) {
+            array_push($methodParams, $tagName);
             $method = "input";
         }
-        elseif(in_array($method, ['checkbox','radio'])) {
-            array_push($params, $method);
+        elseif(in_array($tagName, ['checkbox','radio'])) {
+            array_push($methodParams, $tagName);
             $method = "box";
         }
         $handler = [$this, $method];
-        if(is_callable($handler)){
-            call_user_func_array($handler, $params);
-        }
-        return $this;
+        return !is_null($method) && is_callable($handler) ? call_user_func_array($handler, $methodParams) : '';
     }
 }

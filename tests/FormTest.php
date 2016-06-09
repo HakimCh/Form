@@ -1,20 +1,16 @@
 <?php
 namespace HakimCh\Form\Tests;
 
+use \PHPUnit_Framework_TestCase;
 use \HakimCh\Form\Form;
 use Mockery\Loader;
 
-define('DS', DIRECTORY_SEPARATOR);
-define('ROOT', dirname(__DIR__).DS);
-
-require ROOT.'vendor/autoload.php';
+require dirname(__DIR__).'/vendor/autoload.php';
 
 $loader = new Loader();
 $loader->register();
 
-$_SERVER['REQUEST_METHOD'] = 'POST';
-
-class FormTest extends \PHPUnit_Framework_TestCase
+class FormTest extends PHPUnit_Framework_TestCase
 {
     public function teardown() {
         \Mockery::close();
@@ -43,37 +39,23 @@ class FormTest extends \PHPUnit_Framework_TestCase
     {
         $form = new Form();
         $form->addAttr('id', 'myFormId');
-        $this->assertEquals('myFormId', $form->get('id', 'attrs'));
+        $this->assertEquals('myFormId', $form->get('id', 'attributes'));
     }
 
     public function testAddAttr_WidthArrayValue_ReturnTrue()
     {
         $form = new Form();
         $form->addAttr(['id'=>'myFormId', 'name'=>'myFormName']);
-        $this->assertEquals('myFormName', $form->get('name', 'attrs'));
+        $this->assertEquals('myFormName', $form->get('name', 'attributes'));
     }
 
-    public function testAddClass()
-    {
-        $form = new Form();
-        $form->addClass('myClassName');
-        $this->assertEquals(['myClassName'], $form->classes);
-    }
-
-    public function testUsedFor()
-    {
-        $form = new Form();
-        $form->usedFor('upload');
-        $this->assertEquals(['enctype'=>'multipart/form-data'], $form->attrs);
-    }
-
-    public function testGenerateAttrs()
+    public function testAttributesToHtml()
     {
         $form = new Form();
         $form->addClass('myClassName')
              ->addClass('mySecondClass')
              ->addAttr(['id'=>'myFormId', 'name'=>'myFormName']);
-        $exposedMethod = $this->makePublic($form, 'generateAttrs');
+        $exposedMethod = $this->makePublic($form, 'attributesToHtml');
         $this->assertEquals('class="myClassName mySecondClass" id="myFormId" name="myFormName" ', $exposedMethod->invoke($form));
     }
 
