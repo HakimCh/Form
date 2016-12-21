@@ -21,9 +21,9 @@ $form = \HakimCh\Form\Form::init();
             <div class="debugger right">
                 <h1>Submitted datas</h1>
                 <div class="code">
-                    <pre>POST : <?php print_r($_POST); ?></pre>
-                    <pre>GET : <?php print_r($_GET); ?></pre>
-                    <pre>Files : <?php print_r($_FILES); ?></pre>
+                    <pre>POST : <?php dump($_POST); ?></pre>
+                    <pre>GET : <?php dump($_GET); ?></pre>
+                    <pre>Files : <?php dump($_FILES); ?></pre>
                 </div>
             </div>
             <div class="container">
