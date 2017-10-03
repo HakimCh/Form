@@ -1,7 +1,7 @@
 # Form Class
 A simple html form generator class
 [![Code Climate](https://codeclimate.com/github/HakimCh/Form/badges/gpa.svg)](https://codeclimate.com/github/HakimCh/Form)
-[![](https://d15hperv2jcnaj.cloudfront.net/assets/v3153c81e4f/bundles/sensiolabsinsightanalysis/img/medals/with-ribbon/medal-platinum.png)](https://codeclimate.com/github/HakimCh/Form)
+[![SensioLabsInsight](https://insight.sensiolabs.com/projects/c95d4bcb-9bef-4292-8d3a-e64baffd8794/small.png)](https://insight.sensiolabs.com/projects/c95d4bcb-9bef-4292-8d3a-e64baffd8794)
 
 # Install via composer
 ````code
