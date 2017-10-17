@@ -1,10 +1,10 @@
 <?php
 /**
  * Simple example to how use the class
- * updated at 09/06/2016 12:00:00
+ * updated at 17/10/2017 17:00:00
  */
 
-require '../vendor/autoload.php';
+require dirname(__DIR__) . '/vendor/autoload.php';
 $form = \HakimCh\Form\Form::init();
 ?>
 <!doctype html>
