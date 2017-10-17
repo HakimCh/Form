@@ -16,7 +16,8 @@
         stopOnFailure="false"
         bootstrap="vendor/autoload.php">
     <testsuites>
-        <testsuite name="tests/</directory>
+        <testsuite name="Form test suite">
+            <directory>./tests/</directory>
         </testsuite>
     </testsuites>
     <filter>
