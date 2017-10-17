@@ -1,8 +1,6 @@
 <?php
 namespace HakimCh\Form\Tests;
 
-require dirname(__DIR__).'/vendor/autoload.php';
-
 use \PHPUnit_Framework_TestCase;
 use \HakimCh\Form\Form;
 use Mockery\Loader;
