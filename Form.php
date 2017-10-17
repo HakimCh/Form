@@ -61,7 +61,7 @@ class Form
     /**
      * Create Form tag
      * @param string $method
-     * @param  string $action form url
+     * @param string $action form url
      * @return string
      */
     public function open($method = 'POST', $action = '')
@@ -78,8 +78,8 @@ class Form
 
     /**
      * Create label
-     * @param  string|integer $value
-     * @param  boolean $required
+     * @param string|integer $value
+     * @param boolean $required
      * @return string
      */
     public function label($value, $required = null)
@@ -103,7 +103,7 @@ class Form
         if(!empty($options)) {
             $fieldValue = $this->get($fieldName);
             foreach($options as $value => $text) {
-                $selected = $fieldValue != $value ?: ' selected="selected"';
+                $selected = $fieldValue != $value ? '' : ' selected="selected"';
                 $fieldOptions .= '<option value="'.$value.'"'.$selected.'>'.ucfirst($text).'</option>';
             }
         }
@@ -112,7 +112,7 @@ class Form
 
     /**
      * Create Textarea tag
-     * @param  string $fieldName
+     * @param string $fieldName
      * @return string
      */
     public function textarea($fieldName)
@@ -123,8 +123,8 @@ class Form
 
     /**
      * Create submit button
-     * @param  string  $value field text
-     * @param  boolean $iconClass the icon class from (fontawsome, ionicons...)
+     * @param string  $value field text
+     * @param string|null $iconClass the icon class from (fontawsome, ionicons...)
      * @return string
      */
     public function button($value = 'Submit', $iconClass = null)
@@ -137,7 +137,7 @@ class Form
 
     /**
      * Create submit button
-     * @param  string $value  Field value
+     * @param string $value  Field value
      * @return string
      */
     public function submit($value = 'Submit')
@@ -149,7 +149,7 @@ class Form
      * Add an attribute to the field
      * @param String|Array $key attribute name
      * @param Integer|String $value attribute value
-     * @return $this
+     * @return Form
      */
     public function addAttr($key, $value = null)
     {
@@ -162,9 +162,9 @@ class Form
 
     /**
      * Get element by key from the user datas
-     * @param  string $key the field name
-     * @param  string $source source of datas (datas, files, attributes)
-     * @return Return value or a null
+     * @param string $key the field name
+     * @param string $source source of datas (datas, files, attributes)
+     * @return mixed
      */
     public function get($key = '', $source = 'datas')
     {
@@ -178,8 +178,8 @@ class Form
 
     /**
      * Create Input field
-     * @param  string $fieldName Field name
-     * @param  string $type field type (text, password...)
+     * @param string $fieldName Field name
+     * @param string $type field type (text, password...)
      * @return string
      */
     protected function input($fieldName, $type) {
@@ -212,8 +212,8 @@ class Form
 
     /**
      * Add an HTML Form tag
-     * @param $tagType Tag type (label, textarea, select...)
-     * @param $tagContent  Tag content or value
+     * @param string $tagType Tag type (label, textarea, select...)
+     * @param string|integer $tagContent Tag content or value
      * @return string
      */
     protected function addTag($tagType, $tagContent)
