@@ -2,6 +2,9 @@
 A simple html form generator class
 [![Code Climate](https://codeclimate.com/github/HakimCh/Form/badges/gpa.svg)](https://codeclimate.com/github/HakimCh/Form)
 [![SensioLabsInsight](https://insight.sensiolabs.com/projects/c95d4bcb-9bef-4292-8d3a-e64baffd8794/small.png)](https://insight.sensiolabs.com/projects/c95d4bcb-9bef-4292-8d3a-e64baffd8794)
+[![Build Status](https://travis-ci.org/HakimCh/Form.svg?branch=master)](https://travis-ci.org/HakimCh/Form)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/HakimCh/Form/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/HakimCh/Form/?branch=master)
+[![Build Status](https://scrutinizer-ci.com/g/HakimCh/Form/badges/build.png?b=master)](https://scrutinizer-ci.com/g/HakimCh/Form/build-status/master)
 
 # Install via composer
 ````code
