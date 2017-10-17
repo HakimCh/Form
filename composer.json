@@ -1,21 +1,18 @@
 {
     "name": "hakimch/form",
     "type" : "library",
-    "description": "A simple PHP form generator class for PHP 5.4+.",
+    "description": "A simple PHP form generator class for PHP 5.6+.",
     "keywords": ["form","php form", "form class"],
-    "homepage": "https://github.com/HakimCh/Utility/blob/master/src/Utility/Component/Form",
+    "homepage": "https://github.com/HakimCh/Form",
     "license": "MIT",
     "authors": [
-            {
-                "name": "Hakim Chmimo",
-                "email": "ab.chmimo@gmail.com",
-                "homepage": "https://github.com/HakimCh",
-                "role": "Developer"
-            }
-        ],
+        {
+            "name": "Hakim Ch",
+            "homepage": "https://github.com/HakimCh"
+        }
+    ],
     "require": {
-        "php": ">=5.4.0",
-        "symfony/var-dumper": "^3.2"
+        "php": ">=5.6.0"
     },
     "autoload": {
         "psr-4": {
@@ -24,7 +21,11 @@
     },
     "require-dev": {
         "mockery/mockery": "^0.9.5",
-        "phpunit/phpunit": "^5.4",
-        "codeclimate/php-test-reporter": "^0.3.2"
+        "phpunit/phpunit": "4.5.*",
+        "codeclimate/php-test-reporter": "0.4.0",
+        "symfony/var-dumper": "^3.2"
+    },
+    "scripts": {
+        "test": "vendor/bin/phpunit"
     }
 }
